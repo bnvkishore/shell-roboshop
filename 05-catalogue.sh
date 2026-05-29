@@ -65,7 +65,18 @@ VALIDATE $? "Created systemctl service"
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGS_FILE
 VALIDATE $? "Added mongo repo"
 
-dnf install mongodb-mongosh -y
+dnf install mongodb-mongosh -y &>>$LOGS_FILE
 VALIDATE $? "Installed MongoDB client"
 
-# mongosh --host MONGODB-SERVER-IPADDRESS </app/db/master-data.js
+INDEX=$(mongosh --host mongodb.daws90.shop --eval 'db.getMongo().getDBNames().indexOf("catalogue")') &>>$LOGS_FILE
+if [ $INDEX -lt 0 ]; then
+    mongosh --host MONGODB-SERVER-IPADDRESS </app/db/master-data.js &>>$LOGS_FILE
+    VALIDATE $? "Load products"
+else 
+    echo -e "Products alread loaded ... $Y SKIPPING $N"
+fi
+
+systemctl daemon-reload &>>$LOGS_FILE
+systemctl enable catalogue &>>$LOGS_FILE
+systemctl start catalogue &>>$LOGS_FILE
+VALIDATE $? "Restarting catalogue"
