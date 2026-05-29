@@ -43,10 +43,10 @@ else
 fi
 
 rm -rf /app 
-VALIDATE $? "Remvoing existing folder"
+VALIDATE $? "Removing existing folder"
 
 rm -rf /tmp/catalogue.zip
-VALIDATE $? "Remvoe catalogue zip"
+VALIDATE $? "Remove catalogue zip"
 
 mkdir -p /app &>>$LOGS_FILE
 VALIDATE $? "Creating app directory"
@@ -70,7 +70,7 @@ VALIDATE $? "Installed MongoDB client"
 
 INDEX=$(mongosh --host mongodb.daws90.shop --eval 'db.getMongo().getDBNames().indexOf("catalogue")') &>>$LOGS_FILE
 if [ $INDEX -lt 0 ]; then
-    mongosh --host MONGODB-SERVER-IPADDRESS </app/db/master-data.js &>>$LOGS_FILE
+    mongosh --host mongodb.daws90.shop </app/db/master-data.js &>>$LOGS_FILE
     VALIDATE $? "Load products"
 else 
     echo -e "Products alread loaded ... $Y SKIPPING $N"
