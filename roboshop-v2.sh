@@ -14,3 +14,12 @@ if [ $# -lt 2 ]; then
     echo "USAGE: $0 [create/delete] [Instance1] [Instance2] ..."
     exit 1
 fi
+
+ACTION=$1
+shift # first argument will be removed, Now $@ doesnt have create/delete
+
+if [ ${ACTION,,} != "create" ] && [ ${ACTION,,} != "delete" ]; then
+    echo -e "$R ERROR:: First arugment must be either create or delete $N"
+    echo "USAGE: $0 [create/delete] [Instance1] [Instance2] ..."
+    exit 1
+fi
